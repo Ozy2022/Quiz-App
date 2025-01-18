@@ -1,3 +1,4 @@
+import 'package:adv_basic/data/questions.dart';
 import 'package:adv_basic/questions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:adv_basic/start_screen.dart';
@@ -12,6 +13,8 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  //can't reassign it only edit it with a final
+  List<String> selcetedAnswers = [];
   var activeScreen = 'start-screen';
 
   void switchScreen() {
@@ -20,11 +23,24 @@ class _QuizState extends State<Quiz> {
     });
   }
 
+  void chooseAnswers(String answer) {
+    selcetedAnswers.add(answer);
+
+    if (selcetedAnswers.length == questions.length) {
+      setState(() {
+        selcetedAnswers = [];
+        activeScreen = "start-screen";
+      });
+    }
+  }
+
   @override
   Widget build(context) {
     Widget screenWidget = StartScreen(switchScreen);
     if (activeScreen == 'questions-screen') {
-      screenWidget = const QuestionsScreen();
+      screenWidget = QuestionsScreen(
+        onSelectedAnswer: chooseAnswers,
+      );
     }
 
     return MaterialApp(
@@ -46,3 +62,18 @@ class _QuizState extends State<Quiz> {
     );
   }
 }
+
+/*
+
+#Passing Data via Functions Across Widgets
+
+1- final numbers = [1,2,3]; => create & stores a list object in memory
+
+2- numbers = [4. 5. 6]; => Tries to create a new list object and assign it to
+   the variable note that does not work when using final!
+
+3- numbers.add(4); => back to step1 wich Reaches out 
+   to exiting value in memory and edits 
+   internal data structure data.
+
+ */
